@@ -3,10 +3,6 @@ name: Build Kernel
 on: 
   workflow_dispatch:
     inputs:
-      ZIP_NAME:
-        description: 'Final zip file output'
-        required: true
-        default: ''
       DEVICE_NAME:
         description: 'Your device codename.'
         required: true
@@ -14,7 +10,7 @@ on:
       ANDROID_VERSION:
         description: 'Your android version.'
         required: true
-        default: 't-oss'
+        default: ''
         type: choice
         options:
         - t-oss
@@ -45,18 +41,14 @@ jobs:
 
     - name: Compressed as Archive
       run: |
-        cd /home/runner/work/myKernel/
-        git clone --depth=1 https://github.com/cd-Seraph/AnyKernel3.git -b master AnyKernel
-        cp out/arch/arm64/boot/Image AnyKernel
-        python scripts/dtc/libfdt/mkdtboimg.py create AnyKernel/dtbo.img --page_size=4096 out/arch/arm64/boot/dts/vendor/oplus_7325/yupik-21643-overlay.dtbo
-        cd AnyKernel
-        zip -r9 "../${{ github.event.inputs.ZIP_NAME }}-${{ steps.props.outputs.date }}.zip" * -x .git README.md *placeholder
-        
+        cd /home/runner/work/myKernel/out/arch/arm64/boot || exit 1
+        zip -r9 "${{ github.event.inputs.DEVICE_NAME }}-${{ steps.props.outputs.date }}.zip" ./* -x "dts" -x "dts/*"
+
     - name: Release
       uses: ncipollo/release-action@v1.12.0
       with:
         artifacts: |
-          /home/runner/work/myKernel/*.zip
+          /home/runner/work/myKernel/out/arch/arm64/boot/*.zip
           /home/runner/work/myKernel/build.log
         name: Compiled Kernel for ${{ github.event.inputs.DEVICE_NAME }} - ${{ steps.props.outputs.date }}
         draft: false
@@ -65,7 +57,7 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         body: |
           ## Notes
-            - Flash your newly built kernel!
+            - Extract ${{ github.event.inputs.DEVICE_NAME }}-${{ steps.props.outputs.date }}.zip, look your newly-compiled kernel inside.
             - Include building logs.
 
     - name: Link of Release
