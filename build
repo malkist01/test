@@ -12,8 +12,7 @@ CLANG_URL="https://android.googlesource.com/platform/prebuilts/clang/host/linux-
 # Prebuilt GCC Utilities (AOSP)
 GCC_x64="https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9"
 GCC_x32="https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9"
-GCC_BRANCH="master-kernel-build-2021"
-
+GCC_BRANCH="android-msm-barbet-4.19-android12L"
 # Setup make Command
 make_fun() {
 	make O=out ARCH=arm64 CC=clang HOSTCC=clang \
