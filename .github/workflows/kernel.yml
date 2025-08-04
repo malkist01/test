@@ -7,23 +7,13 @@ on:
         description: 'Your device codename.'
         required: true
         default: 'mido'
-      ANDROID_VERSION:
-        description: 'Your android version.'
-        required: true
-        default: ''
-        type: choice
-        options:
-        - t-oss
-        - s-oss
-        - r-oss
-        - q-oss
 
 permissions:
   contents: write
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout
       uses: actions/checkout@main
@@ -42,7 +32,7 @@ jobs:
     - name: Set Properties
       id: props
       run: |
-        echo "date=$(TZ=Asia/Manila date +%Y%m%d-%I%M%p)" >> $GITHUB_OUTPUT
+        echo "date=$(TZ=Asia/Jakarta date +%Y%m%d-%I%M%p)" >> $GITHUB_OUTPUT
 
     - name: Compressed as Archive
       run: |
